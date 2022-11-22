@@ -1,6 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using ShipmentApi.EfCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddDbContext<EF_DataContext>(
+                o => o.UseNpgsql(builder.Configuration.GetConnectionString("Ef_Postgres_Db"))
+            );
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
