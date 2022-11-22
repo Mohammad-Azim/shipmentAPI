@@ -7,6 +7,8 @@ namespace ShipmentApi.EfCore
     {
         public EF_DataContext(DbContextOptions<EF_DataContext> options) : base(options) { }
 
+        public DbSet<Shipment> Shipments { get; set; }
+        public DbSet<CarrierService> carrierServices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
