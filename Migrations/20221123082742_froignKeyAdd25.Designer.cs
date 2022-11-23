@@ -11,8 +11,8 @@ using ShipmentApi.EfCore;
 namespace shipmentAPI.Migrations
 {
     [DbContext(typeof(EF_DataContext))]
-    [Migration("20221122104915_setUpDatabase")]
-    partial class setUpDatabase
+    [Migration("20221123082742_froignKeyAdd25")]
+    partial class froignKeyAdd25
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,40 +25,40 @@ namespace shipmentAPI.Migrations
 
             modelBuilder.Entity("ShipmentApi.Model.CarrierService", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("dimentions_type")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<string>("weight_type")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("name")
+                    b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("CarrierService");
+                    b.ToTable("CarrierServices");
                 });
 
             modelBuilder.Entity("ShipmentApi.Model.Shipment", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CarrierServiceId")
                         .HasColumnType("integer");
@@ -72,7 +72,7 @@ namespace shipmentAPI.Migrations
                     b.Property<int>("width")
                         .HasColumnType("integer");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("CarrierServiceId");
 
@@ -81,18 +81,13 @@ namespace shipmentAPI.Migrations
 
             modelBuilder.Entity("ShipmentApi.Model.Shipment", b =>
                 {
-                    b.HasOne("ShipmentApi.Model.CarrierService", "carrierService")
-                        .WithMany("shipments")
+                    b.HasOne("ShipmentApi.Model.CarrierService", "CarrierService")
+                        .WithMany()
                         .HasForeignKey("CarrierServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("carrierService");
-                });
-
-            modelBuilder.Entity("ShipmentApi.Model.CarrierService", b =>
-                {
-                    b.Navigation("shipments");
+                    b.Navigation("CarrierService");
                 });
 #pragma warning restore 612, 618
         }

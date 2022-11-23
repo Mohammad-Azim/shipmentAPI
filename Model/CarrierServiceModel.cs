@@ -3,14 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ShipmentApi.Model
 {
 
-    [Table("CarrierService")]
     public class CarrierService
     {
-        [Key, Required]
-        public int id { get; set; }
+        public int Id { get; set; }
 
         [Required, StringLength(50)]
-        public string? name { get; set; }
+        public string? Name { get; set; }
 
         [Required]
         public string dimentions_type { get; set; } = string.Empty;
@@ -18,6 +16,8 @@ namespace ShipmentApi.Model
         [Required]
         public string weight_type { get; set; } = string.Empty;
 
-        public ICollection<Shipment>? shipments { get; set; }
+        // Navigation property
+        public List<Shipment>? Shipments { get; set; }
+
     }
 }

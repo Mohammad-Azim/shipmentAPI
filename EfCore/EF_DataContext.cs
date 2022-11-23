@@ -7,13 +7,13 @@ namespace ShipmentApi.EfCore
     {
         public EF_DataContext(DbContextOptions<EF_DataContext> options) : base(options) { }
 
-        public DbSet<Shipment> Shipments { get; set; }
-        public DbSet<CarrierService> carrierServices { get; set; }
+        public DbSet<Shipment>? Shipments { get; set; }
+        public DbSet<CarrierService>? CarrierServices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<CarrierService>().HasIndex(u => u.name).IsUnique();
+            builder.Entity<CarrierService>().HasIndex(u => u.Name).IsUnique();
 
         }
     }

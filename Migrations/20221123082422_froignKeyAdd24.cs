@@ -5,30 +5,30 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace shipmentAPI.Migrations
 {
-    public partial class setUpDatabase : Migration
+    public partial class froignKeyAdd24 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "CarrierService",
+                name: "CarrierServices",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     dimentions_type = table.Column<string>(type: "text", nullable: false),
                     weight_type = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CarrierService", x => x.id);
+                    table.PrimaryKey("PK_CarrierServices", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Shipments",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     width = table.Column<int>(type: "integer", nullable: false),
                     height = table.Column<int>(type: "integer", nullable: false),
@@ -37,19 +37,19 @@ namespace shipmentAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Shipments", x => x.id);
+                    table.PrimaryKey("PK_Shipments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Shipments_CarrierService_CarrierServiceId",
+                        name: "FK_Shipments_CarrierServices_CarrierServiceId",
                         column: x => x.CarrierServiceId,
-                        principalTable: "CarrierService",
-                        principalColumn: "id",
+                        principalTable: "CarrierServices",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CarrierService_name",
-                table: "CarrierService",
-                column: "name",
+                name: "IX_CarrierServices_Name",
+                table: "CarrierServices",
+                column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -64,7 +64,7 @@ namespace shipmentAPI.Migrations
                 name: "Shipments");
 
             migrationBuilder.DropTable(
-                name: "CarrierService");
+                name: "CarrierServices");
         }
     }
 }

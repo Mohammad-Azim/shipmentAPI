@@ -1,13 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ShipmentApi.EfCore;
 using ShipmentApi.Model;
 
 namespace shipmentAPI.Controllers
 {
+
     [ApiController]
     [Route("[controller]")]
     public class CarrierServiceController : ControllerBase
     {
+
         private EF_DataContext? _db;
         public CarrierServiceController(EF_DataContext db)
         {
@@ -17,7 +20,7 @@ namespace shipmentAPI.Controllers
         [HttpGet(Name = "GetCarrierServices")]
         public IActionResult Get()
         {
-            var response = _db?.carrierServices.ToList();
+            var response = _db?.CarrierServices?.Include(b => b.Shipments);
             return Ok(response);
         }
 
@@ -26,7 +29,7 @@ namespace shipmentAPI.Controllers
         {
             try
             {
-                _db!.carrierServices.Add(model);
+                _db!.CarrierServices?.Add(model);
                 _db.SaveChanges();
                 return Ok(model);
             }
@@ -39,5 +42,6 @@ namespace shipmentAPI.Controllers
 
 
     }
+
 
 }
