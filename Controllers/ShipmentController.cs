@@ -56,19 +56,22 @@ namespace shipmentAPI.Controllers
                 }
                 else
                 {
-                    return BadRequest("wrong CarrierService name 123");
+                    string Info = $"The Carrier Service {{{modelDTO.CarrierServiceName}}} Not Found In {{{modelDTO.CarrierName}}} Carrier Company";
+                    return Ok(ResponseHandler.GetAppResponse(ResponseType.NotFound, modelDTO, Info));
                 }
             }
             else
             {
-                return BadRequest("wrong carrier name");
+                string Info = $"Carrier {{{modelDTO.CarrierName}}} Not Found";
+                return Ok(ResponseHandler.GetAppResponse(ResponseType.NotFound, modelDTO, Info));
             }
 
             try
             {
                 _db!.Shipments?.Add(model);
                 _db.SaveChanges();
-                return Ok(model);
+                string Info = $"Your shipment has been added to {{{modelDTO.CarrierName}}} Carrier Company In {{{modelDTO.CarrierServiceName}}} Carrier Service";
+                return Ok(ResponseHandler.GetAppResponse(ResponseType.NotFound, modelDTO, Info));
             }
             catch (Exception ex)
             {

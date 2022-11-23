@@ -31,7 +31,8 @@ namespace shipmentAPI.Controllers
             {
                 _db!.Carrier?.Add(model);
                 _db.SaveChanges();
-                return Ok(model);
+                return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, model));
+
             }
             catch (Exception ex)
             {
