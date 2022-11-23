@@ -9,7 +9,7 @@ namespace ShipmentApi.Model
         [Required, StringLength(50)]
         public string? Name { get; set; }
 
-        [Required]
+        [Required,]
         public string dimentions_type { get; set; } = string.Empty;
 
         [Required]

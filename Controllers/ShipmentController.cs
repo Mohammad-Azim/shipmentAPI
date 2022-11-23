@@ -18,8 +18,6 @@ namespace shipmentAPI.Controllers
         [HttpGet(Name = "GetShipments")]
         public IActionResult Get()
         {
-            //var response = _db?.Shipments.Include(b => b.Carrier);
-
             var response = from b in _db?.Shipments?.Include(b => b.Carrier).Include(s => s.CarrierService)
                            select new ShipmentDTO()
                            {
@@ -33,32 +31,32 @@ namespace shipmentAPI.Controllers
         }
 
         [HttpPost(Name = "PostShipments")]
-        public IActionResult Post([FromBody] ShipmentDTO model)
+        public IActionResult Post([FromBody] ShipmentDTO modelDTO)
         {
-            bool CarrierExists = _db!.Carrier!.Any(t => t.Name == model.CarrierName);
-            bool CarrierServiceExists = _db!.CarrierService!.Any(t => t.Name == model.CarrierServiceName);
+            var carrier = _db!.Carrier?.Include(x => x.CarrierServices)!.SingleOrDefault(c => c.Name == modelDTO.CarrierName);
 
-            Shipment model2 = new Shipment
+            Shipment model = new Shipment
             {
-                width = model.width,
-                height = model.height,
-                weight = model.weight,
+                width = modelDTO.width,
+                height = modelDTO.height,
+                weight = modelDTO.weight,
                 CarrierId = 0,
                 CarrierServiceId = 0
             };
 
-            if (CarrierExists)
+            if (carrier != null)
             {
-                model2.CarrierId = _db.Carrier!.First(c => c.Name == model.CarrierName).Id;
+                model.CarrierId = carrier.Id;
 
-                if (CarrierServiceExists)
+                var carrierService = carrier.CarrierServices?.Find(t => t.Name == modelDTO.CarrierServiceName);
+
+                if (carrierService != null)
                 {
-                    model2.CarrierServiceId = _db.CarrierService!.First(c => c.Name == model.CarrierServiceName).Id;
-
+                    model.CarrierServiceId = carrierService.Id;
                 }
                 else
                 {
-                    return BadRequest("wrong CarrierService name");
+                    return BadRequest("wrong CarrierService name 123");
                 }
             }
             else
@@ -68,9 +66,9 @@ namespace shipmentAPI.Controllers
 
             try
             {
-                _db!.Shipments?.Add(model2);
+                _db!.Shipments?.Add(model);
                 _db.SaveChanges();
-                return Ok(model2);
+                return Ok(model);
             }
             catch (Exception ex)
             {
