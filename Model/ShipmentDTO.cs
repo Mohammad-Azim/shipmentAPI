@@ -11,6 +11,7 @@ namespace ShipmentApi.Model
 
         public int weight { get; set; }
 
+        public string CarrierName { get; set; } = string.Empty;
 
         public string CarrierServiceName { get; set; } = string.Empty;
 

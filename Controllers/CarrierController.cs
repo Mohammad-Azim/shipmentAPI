@@ -8,28 +8,28 @@ namespace shipmentAPI.Controllers
 
     [ApiController]
     [Route("[controller]")]
-    public class CarrierServiceController : ControllerBase
+    public class CarrierController : ControllerBase
     {
 
         private EF_DataContext? _db;
-        public CarrierServiceController(EF_DataContext db)
+        public CarrierController(EF_DataContext db)
         {
             _db = db;
         }
 
-        [HttpGet(Name = "GetCarrierServices")]
+        [HttpGet(Name = "GetCarrier")]
         public IActionResult Get()
         {
-            var response = _db?.CarrierService?.Include(b => b.Shipments);
+            var response = _db?.Carrier?.Include(b => b.Shipments).Include(e => e.CarrierServices);
             return Ok(response);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CarrierService model)
+        public IActionResult Post([FromBody] Carrier model)
         {
             try
             {
-                _db!.CarrierService?.Add(model);
+                _db!.Carrier?.Add(model);
                 _db.SaveChanges();
                 return Ok(model);
             }

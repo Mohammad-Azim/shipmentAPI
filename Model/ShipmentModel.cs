@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ShipmentApi.Model
 {
@@ -15,6 +14,11 @@ namespace ShipmentApi.Model
 
         public int weight { get; set; }
 
+
+        // Foreign Key
+        public int CarrierId { get; set; }
+        // Navigation property
+        public Carrier? Carrier { get; set; }
 
         // Foreign Key
         public int CarrierServiceId { get; set; }

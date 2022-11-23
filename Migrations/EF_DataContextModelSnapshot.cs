@@ -21,7 +21,7 @@ namespace shipmentAPI.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ShipmentApi.Model.CarrierService", b =>
+            modelBuilder.Entity("ShipmentApi.Model.Carrier", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,7 +47,33 @@ namespace shipmentAPI.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("CarrierServices");
+                    b.ToTable("Carrier");
+                });
+
+            modelBuilder.Entity("ShipmentApi.Model.CarrierService", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CarrierId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarrierId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("CarrierService");
                 });
 
             modelBuilder.Entity("ShipmentApi.Model.Shipment", b =>
@@ -57,6 +83,9 @@ namespace shipmentAPI.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CarrierId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("CarrierServiceId")
                         .HasColumnType("integer");
@@ -72,20 +101,51 @@ namespace shipmentAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CarrierId");
+
                     b.HasIndex("CarrierServiceId");
 
                     b.ToTable("Shipments");
                 });
 
+            modelBuilder.Entity("ShipmentApi.Model.CarrierService", b =>
+                {
+                    b.HasOne("ShipmentApi.Model.Carrier", null)
+                        .WithMany("CarrierServices")
+                        .HasForeignKey("CarrierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ShipmentApi.Model.Shipment", b =>
                 {
+                    b.HasOne("ShipmentApi.Model.Carrier", "Carrier")
+                        .WithMany("Shipments")
+                        .HasForeignKey("CarrierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ShipmentApi.Model.CarrierService", "CarrierService")
-                        .WithMany()
+                        .WithMany("Shipments")
                         .HasForeignKey("CarrierServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Carrier");
+
                     b.Navigation("CarrierService");
+                });
+
+            modelBuilder.Entity("ShipmentApi.Model.Carrier", b =>
+                {
+                    b.Navigation("CarrierServices");
+
+                    b.Navigation("Shipments");
+                });
+
+            modelBuilder.Entity("ShipmentApi.Model.CarrierService", b =>
+                {
+                    b.Navigation("Shipments");
                 });
 #pragma warning restore 612, 618
         }
