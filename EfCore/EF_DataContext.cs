@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using ShipmentApi.Model;
+using ShipmentAPI.Model;
 
-namespace ShipmentApi.EfCore
+namespace ShipmentAPI.EfCore
 {
     public class EF_DataContext : DbContext
     {
@@ -9,7 +9,6 @@ namespace ShipmentApi.EfCore
 
         public DbSet<Shipment>? Shipments { get; set; }
         public DbSet<Carrier>? Carrier { get; set; }
-
         public DbSet<CarrierService>? CarrierService { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

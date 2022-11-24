@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShipmentApi.EfCore;
-using ShipmentApi.Model;
+using ShipmentAPI.EfCore;
+using ShipmentAPI.Model;
 
-namespace shipmentAPI.Controllers
+namespace ShipmentAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]

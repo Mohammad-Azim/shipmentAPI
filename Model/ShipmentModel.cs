@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ShipmentApi.Model
+namespace ShipmentAPI.Model
 {
 
     public class Shipment

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using ShipmentApi.EfCore;
+using ShipmentAPI.EfCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

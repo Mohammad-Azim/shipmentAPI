@@ -1,6 +1,6 @@
 
 
-namespace ShipmentApi.Model
+namespace ShipmentAPI.Model
 {
     public class ShipmentDTO
     {
