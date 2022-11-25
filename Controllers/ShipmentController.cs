@@ -18,16 +18,36 @@ namespace ShipmentAPI.Controllers
         [HttpGet(Name = "GetShipments")]
         public IActionResult Get()
         {
-            var response = from b in _db?.Shipments?.Include(b => b.Carrier).Include(s => s.CarrierService)
-                           select new ShipmentDTO()
-                           {
-                               width = b.width,
-                               height = b.height,
-                               weight = b.weight,
-                               CarrierName = b.Carrier!.Name!,
-                               CarrierServiceName = b.CarrierService!.Name!
-                           };
-            return Ok(response);
+            try
+            {
+                var response = from b in _db?.Shipments?.Include(b => b.Carrier).Include(s => s.CarrierService)
+                               select new ShipmentDTO()
+                               {
+                                   width = b.width,
+                                   height = b.height,
+                                   weight = b.weight,
+                                   CarrierName = b.Carrier!.Name!,
+                                   CarrierServiceName = b.CarrierService!.Name!
+                               };
+
+                if (response.Any())
+                {
+                    return Ok(response);
+                }
+                else
+                {
+                    return Ok();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+
+
+
+
         }
 
         [HttpPost(Name = "PostShipments")]
@@ -71,7 +91,7 @@ namespace ShipmentAPI.Controllers
                 _db!.Shipments?.Add(model);
                 _db.SaveChanges();
                 string Info = $"Your shipment has been added to {{{modelDTO.CarrierName}}} Carrier Company In {{{modelDTO.CarrierServiceName}}} Carrier Service";
-                return Ok(ResponseHandler.GetAppResponse(ResponseType.NotFound, modelDTO, Info));
+                return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, modelDTO, Info));
             }
             catch (Exception ex)
             {
