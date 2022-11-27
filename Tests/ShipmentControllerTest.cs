@@ -2,8 +2,7 @@ using Xunit;
 using ShipmentAPI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using ShipmentAPI.Model;
-
-
+using ShipmentAPI.EfCore;
 
 namespace ShipmentAPI.Test;
 public class ShipmentControllerTest : ShipmentAPITestBase
@@ -56,7 +55,7 @@ public class ShipmentControllerTest : ShipmentAPITestBase
 
 
     [Fact]
-    public void TestPostShipmentWrongCarrier()
+    public void TestPostShipmentWrongCarrierName()
     {
         ShipmentDTO modelDTO = new ShipmentDTO
         {
@@ -104,11 +103,4 @@ public class ShipmentControllerTest : ShipmentAPITestBase
 
         Assert.True(AreEquals((ApiResponse)okResult?.Value!, (ApiResponse)expected.Value!));
     }
-
-
-
-
-
-
-
 }
