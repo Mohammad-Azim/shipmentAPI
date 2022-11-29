@@ -30,16 +30,14 @@ namespace ShipmentAPI.Controllers
             try
             {
                 _unitOfWork.Carrier.Add(model);
-                var response = await Task.FromResult(model);
-                return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, response));
+                await _unitOfWork.Save();
+                return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, model));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex);
             }
         }
-
-
 
     }
 

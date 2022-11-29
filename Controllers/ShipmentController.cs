@@ -94,9 +94,9 @@ namespace ShipmentAPI.Controllers
             {
 
                 _unitOfWork.Shipment.Add(model);
-                var response = await Task.FromResult(model);
+                await _unitOfWork.Save();
                 string Info = $"Your shipment has been added to {{{modelDTO.CarrierName}}} Carrier Company In {{{modelDTO.CarrierServiceName}}} Carrier Service";
-                return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, response, Info));
+                return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, modelDTO, Info));
             }
             catch (Exception ex)
             {

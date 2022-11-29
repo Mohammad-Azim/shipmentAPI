@@ -22,10 +22,6 @@ namespace ShipmentAPI.Interfaces
             get;
         }
 
-
-
-
-
-        int Save();
+        Task<int> Save();
     }
 }

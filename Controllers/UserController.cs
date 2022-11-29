@@ -38,8 +38,8 @@ namespace ShipmentAPI.Controllers
             try
             {
                 _unitOfWork.User.Add(user);
-                var response = await Task.FromResult(user);
-                return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, response));
+                await _unitOfWork.Save();
+                return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, user));
 
             }
             catch (Exception ex)
