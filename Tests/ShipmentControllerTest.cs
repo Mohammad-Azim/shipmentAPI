@@ -15,11 +15,11 @@ public class ShipmentControllerTest : ShipmentAPITestBase
 
 
     [Fact]
-    public void TestGetAllShipments()
+    public async void TestGetAllShipments()
     {
-        var controller = new ShipmentController(_context!);
+        var controller = new ShipmentController(_unitOfWork);
 
-        var result = controller.Get();
+        var result = await controller.Get();
 
         var okResult = (result as OkObjectResult);
 
@@ -29,7 +29,7 @@ public class ShipmentControllerTest : ShipmentAPITestBase
 
 
     [Fact]
-    public void TestPostShipment()
+    public async void TestPostShipment()
     {
         ShipmentDTO modelDTO = new ShipmentDTO
         {
@@ -41,9 +41,9 @@ public class ShipmentControllerTest : ShipmentAPITestBase
         };
 
 
-        var controller = new ShipmentController(_context!);
+        var controller = new ShipmentController(_unitOfWork);
 
-        var result = controller.Post(modelDTO);
+        var result = await controller.Post(modelDTO);
 
         var okResult = (result as OkObjectResult);
 
@@ -55,7 +55,7 @@ public class ShipmentControllerTest : ShipmentAPITestBase
 
 
     [Fact]
-    public void TestPostShipmentWrongCarrierName()
+    public async void TestPostShipmentWrongCarrierName()
     {
         ShipmentDTO modelDTO = new ShipmentDTO
         {
@@ -67,20 +67,20 @@ public class ShipmentControllerTest : ShipmentAPITestBase
         };
 
 
-        var controller = new ShipmentController(_context!);
+        var controller = new ShipmentController(_unitOfWork);
 
-        var result = controller.Post(modelDTO);
+        var result = await controller.Post(modelDTO);
 
-        var okResult = (result as OkObjectResult);
+        var BadResult = (result as BadRequestObjectResult);
 
         string Info = $"Carrier {{{modelDTO.CarrierName}}} Not Found";
-        var expected = controller.Ok(ResponseHandler.GetAppResponse(ResponseType.NotFound, modelDTO, Info));
+        var expected = controller.BadRequest(ResponseHandler.GetAppResponse(ResponseType.NotFound, modelDTO, Info));
 
-        Assert.True(AreEquals((ApiResponse)okResult?.Value!, (ApiResponse)expected.Value!));
+        Assert.True(AreEquals((ApiResponse)BadResult!.Value!, (ApiResponse)expected.Value!));
     }
 
     [Fact]
-    public void TestPostShipmentWrongCarrierServiceName()
+    public async void TestPostShipmentWrongCarrierServiceName()
     {
         ShipmentDTO modelDTO = new ShipmentDTO
         {
@@ -92,15 +92,15 @@ public class ShipmentControllerTest : ShipmentAPITestBase
         };
 
 
-        var controller = new ShipmentController(_context!);
+        var controller = new ShipmentController(_unitOfWork);
 
-        var result = controller.Post(modelDTO);
+        var result = await controller.Post(modelDTO);
 
-        var okResult = (result as OkObjectResult);
+        var BadResult = (result as BadRequestObjectResult);
 
         string Info = $"The Carrier Service {{{modelDTO.CarrierServiceName}}} Not Found In {{{modelDTO.CarrierName}}} Carrier Company";
-        var expected = controller.Ok(ResponseHandler.GetAppResponse(ResponseType.NotFound, modelDTO, Info));
+        var expected = controller.BadRequest(ResponseHandler.GetAppResponse(ResponseType.NotFound, modelDTO, Info));
 
-        Assert.True(AreEquals((ApiResponse)okResult?.Value!, (ApiResponse)expected.Value!));
+        Assert.True(AreEquals((ApiResponse)BadResult?.Value!, (ApiResponse)expected.Value!));
     }
 }

@@ -2,13 +2,13 @@ namespace ShipmentAPI.Model
 {
     public class ResponseHandler
     {
-        public static ApiResponse GetExceptionResponse(Exception ex)
-        {
-            ApiResponse response = new ApiResponse();
-            response.Code = "500";
-            response.ResponseData = ex.Message;
-            return response;
-        }
+        // public static ApiResponse GetExceptionResponse(Exception ex)
+        // {
+        //     ApiResponse response = new ApiResponse();
+        //     response.Code = "500";
+        //     response.ResponseData = ex.Message; 
+        //     return response;
+        // }
         public static ApiResponse GetAppResponse(ResponseType type, object? contract, string MoreInfo = "")
         {
             ApiResponse response;

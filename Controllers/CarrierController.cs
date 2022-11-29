@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShipmentAPI.EfCore;
+using ShipmentAPI.Interfaces;
 using ShipmentAPI.Model;
 
 namespace ShipmentAPI.Controllers
@@ -11,16 +11,16 @@ namespace ShipmentAPI.Controllers
     public class CarrierController : ControllerBase
     {
 
-        private EF_DataContext? _db;
-        public CarrierController(EF_DataContext db)
+        private IUnitOfWork _unitOfWork;
+        public CarrierController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet(Name = "GetCarrier")]
         public IActionResult Get()
         {
-            var response = _db?.Carrier?.Include(b => b.Shipments).Include(e => e.CarrierServices);
+            var response = _unitOfWork?.Carrier?.GetAll().Include(b => b.Shipments).Include(e => e.CarrierServices);
             return Ok(response);
         }
 
@@ -29,10 +29,8 @@ namespace ShipmentAPI.Controllers
         {
             try
             {
-                _db!.Carrier?.Add(model);
-                _db.SaveChanges();
+                _unitOfWork.Carrier.Add(model);
                 return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, model));
-
             }
             catch (Exception ex)
             {

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShipmentAPI.EfCore;
 using ShipmentAPI.Model;
+using ShipmentAPI.Interfaces;
 
 namespace ShipmentAPI.Controllers
 {
@@ -9,28 +9,30 @@ namespace ShipmentAPI.Controllers
     [Route("[controller]")]
     public class ShipmentController : ControllerBase
     {
-        private EF_DataContext? _db;
-        public ShipmentController(EF_DataContext db)
+        // private EF_DataContext? _db;
+
+        private IUnitOfWork _unitOfWork;
+        public ShipmentController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet(Name = "GetShipments")]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
             try
             {
-                var response = from b in _db?.Shipments?.Include(b => b.Carrier).Include(s => s.CarrierService)
-                               select new ShipmentDTO()
-                               {
-                                   width = b.width,
-                                   height = b.height,
-                                   weight = b.weight,
-                                   CarrierName = b.Carrier!.Name!,
-                                   CarrierServiceName = b.CarrierService!.Name!
-                               };
+                var response = await (from b in _unitOfWork?.Shipment?.GetAll()
+                                      select new ShipmentDTO()
+                                      {
+                                          width = b.width,
+                                          height = b.height,
+                                          weight = b.weight,
+                                          CarrierName = b.Carrier!.Name!,
+                                          CarrierServiceName = b.CarrierService!.Name!
+                                      }).ToListAsync();
 
-                if (response.Any())
+                if (response.Count > 0)
                 {
                     return Ok(response);
                 }
@@ -51,9 +53,10 @@ namespace ShipmentAPI.Controllers
         }
 
         [HttpPost(Name = "PostShipments")]
-        public IActionResult Post([FromBody] ShipmentDTO modelDTO)
+
+        public async Task<IActionResult> Post([FromBody] ShipmentDTO modelDTO)
         {
-            var carrier = _db!.Carrier?.Include(x => x.CarrierServices)!.SingleOrDefault(c => c.Name == modelDTO.CarrierName);
+            var carrier = await (_unitOfWork.Carrier.GetAll().Include(x => x.CarrierServices).FirstOrDefaultAsync(c => c.Name == modelDTO.CarrierName));
 
             Shipment model = new Shipment
             {
@@ -70,6 +73,7 @@ namespace ShipmentAPI.Controllers
 
                 var carrierService = carrier.CarrierServices?.Find(t => t.Name == modelDTO.CarrierServiceName);
 
+
                 if (carrierService != null)
                 {
                     model.CarrierServiceId = carrierService.Id;
@@ -77,19 +81,18 @@ namespace ShipmentAPI.Controllers
                 else
                 {
                     string Info = $"The Carrier Service {{{modelDTO.CarrierServiceName}}} Not Found In {{{modelDTO.CarrierName}}} Carrier Company";
-                    return Ok(ResponseHandler.GetAppResponse(ResponseType.NotFound, modelDTO, Info));
+                    return BadRequest(ResponseHandler.GetAppResponse(ResponseType.NotFound, modelDTO, Info));
                 }
             }
             else
             {
                 string Info = $"Carrier {{{modelDTO.CarrierName}}} Not Found";
-                return Ok(ResponseHandler.GetAppResponse(ResponseType.NotFound, modelDTO, Info));
+                return BadRequest(ResponseHandler.GetAppResponse(ResponseType.NotFound, modelDTO, Info));
             }
 
             try
             {
-                _db!.Shipments?.Add(model);
-                _db.SaveChanges();
+                _unitOfWork.Shipment.Add(model);
                 string Info = $"Your shipment has been added to {{{modelDTO.CarrierName}}} Carrier Company In {{{modelDTO.CarrierServiceName}}} Carrier Service";
                 return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, modelDTO, Info));
             }
@@ -99,8 +102,8 @@ namespace ShipmentAPI.Controllers
             }
         }
 
-
-
     }
 
 }
+
+

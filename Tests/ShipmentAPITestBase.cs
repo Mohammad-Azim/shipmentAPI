@@ -1,11 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using ShipmentAPI.EfCore;
 using ShipmentAPI.Model;
+using ShipmentAPI.Interfaces;
+using ShipmentAPI.UnitOfWorks;
+
 
 namespace ShipmentAPI.Test;
 public class ShipmentAPITestBase : IDisposable
 {
     protected EF_DataContext? _context;
+    protected IUnitOfWork _unitOfWork;
 
     public ShipmentAPITestBase()
     {
@@ -15,6 +19,7 @@ public class ShipmentAPITestBase : IDisposable
         _context = new EF_DataContext(options);
         _context.Database.EnsureCreated();
         Seed(_context);
+        _unitOfWork = new UnitOfWork(_context);
     }
 
     public virtual void Seed(EF_DataContext _context)
@@ -43,9 +48,8 @@ public class ShipmentAPITestBase : IDisposable
         _context.SaveChanges();
     }
 
-    public void Dispose()
+    public void Dispose() // ?????? no need ?
     {
-        _context!.Database.EnsureDeleted();
-        _context!.Dispose();
+        _unitOfWork.Dispose();
     }
 }
