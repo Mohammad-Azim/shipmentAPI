@@ -5,43 +5,50 @@ using ShipmentAPI.Model;
 
 namespace ShipmentAPI.Controllers
 {
-
     [ApiController]
     [Route("[controller]")]
-    public class CarrierController : ControllerBase
+    public class UserController : ControllerBase
     {
-
         private IUnitOfWork _unitOfWork;
-        public CarrierController(IUnitOfWork unitOfWork)
+        public UserController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet(Name = "GetCarrier")]
-        public IActionResult Get()
-        {
-            var response = _unitOfWork?.Carrier?.GetAll().Include(b => b.Shipments).Include(e => e.CarrierServices);
-            return Ok(response);
-        }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Carrier model)
+        [HttpGet]
+        public async Task<IActionResult> Get()
         {
             try
             {
-                _unitOfWork.Carrier.Add(model);
-                var response = await Task.FromResult(model);
-                return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, response));
+                var response = await _unitOfWork.User.GetAll().ToListAsync();
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex);
             }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] User user)
+        {
+            try
+            {
+                _unitOfWork.User.Add(user);
+                var response = await Task.FromResult(user);
+                return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, response));
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex);
+            }
         }
 
 
-
     }
-
-
 }

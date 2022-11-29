@@ -25,12 +25,13 @@ namespace ShipmentAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CarrierService model)
+        public async Task<IActionResult> Post([FromBody] CarrierService model)
         {
             try
             {
                 _unitOfWork!.CarrierService?.Add(model);
-                return Ok(model);
+                var response = await Task.FromResult(model);
+                return Ok(response);
             }
             catch (Exception ex)
             {

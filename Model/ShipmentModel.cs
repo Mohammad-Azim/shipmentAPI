@@ -16,6 +16,11 @@ namespace ShipmentAPI.Model
 
 
         // Foreign Key
+        public int UserId { get; set; }
+        // Navigation property
+        public User? User { get; set; }
+
+        // Foreign Key
         public int CarrierId { get; set; }
         // Navigation property
         public Carrier? Carrier { get; set; }

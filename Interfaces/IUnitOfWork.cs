@@ -2,6 +2,11 @@ namespace ShipmentAPI.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
+
+        IUserRepository User
+        {
+            get;
+        }
         IShipmentRepository Shipment
         {
             get;
@@ -16,6 +21,8 @@ namespace ShipmentAPI.Interfaces
         {
             get;
         }
+
+
 
 
 

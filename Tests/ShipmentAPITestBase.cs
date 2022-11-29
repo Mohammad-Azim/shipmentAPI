@@ -8,7 +8,7 @@ using ShipmentAPI.UnitOfWorks;
 namespace ShipmentAPI.Test;
 public class ShipmentAPITestBase : IDisposable
 {
-    protected EF_DataContext? _context;
+    protected EF_DataContext _context;
     protected IUnitOfWork _unitOfWork;
 
     public ShipmentAPITestBase()
