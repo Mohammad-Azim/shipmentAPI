@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShipmentAPI.Model;
 using ShipmentAPI.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShipmentAPI.Controllers
 {
@@ -17,6 +18,7 @@ namespace ShipmentAPI.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet(Name = "GetShipments")]
         public async Task<IActionResult> Get()
         {

@@ -11,10 +11,8 @@ namespace ShipmentAPI.Repositories
 
         public async Task<User?> GetUser(UserLoginDTO userInput)
         {
-            var user = await this.context.Users.FirstOrDefaultAsync(u => u.Email == userInput.Email && u.Password == userInput.Password);
+            var user = await this.context.Users!.FirstOrDefaultAsync(u => u.Email == userInput.Email && u.Password == userInput.Password);
             return user;
         }
-
-
     }
 }
