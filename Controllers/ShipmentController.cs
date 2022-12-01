@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using ShipmentAPI.Model;
 using ShipmentAPI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ShipmentAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "admin")]
     public class ShipmentController : ControllerBase
     {
         // private EF_DataContext? _db;
@@ -18,7 +20,6 @@ namespace ShipmentAPI.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [Authorize(Roles = "admin")]
         [HttpGet(Name = "GetShipments")]
         public async Task<IActionResult> Get()
         {
@@ -59,12 +60,14 @@ namespace ShipmentAPI.Controllers
         public async Task<IActionResult> Post([FromBody] ShipmentDTO modelDTO)
         {
             var carrier = await (_unitOfWork.Carrier.GetAll().Include(x => x.CarrierServices).FirstOrDefaultAsync(c => c.Name == modelDTO.CarrierName));
+            string TokenUserId = User.FindFirst(ClaimTypes.UserData)!.Value;
 
             Shipment model = new Shipment
             {
                 width = modelDTO.width,
                 height = modelDTO.height,
                 weight = modelDTO.weight,
+                UserId = Int32.Parse(TokenUserId),
                 CarrierId = 0,
                 CarrierServiceId = 0
             };

@@ -14,7 +14,5 @@ namespace ShipmentAPI.Model
         public string CarrierName { get; set; } = string.Empty;
 
         public string CarrierServiceName { get; set; } = string.Empty;
-
-        public string UserName { get; set; } = string.Empty;
     }
 }
