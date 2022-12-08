@@ -1,19 +1,25 @@
 using System.ComponentModel.DataAnnotations;
+
 namespace ShipmentAPI.Model
 {
 
-    public class CarrierService
+    public class User
     {
+
         public int Id { get; set; }
 
         [Required, StringLength(50)]
-        public string? Name { get; set; }
+        public string Email { get; set; } = string.Empty;
 
-        public int CarrierId { get; set; }
+        [Required]
+        public string Password { get; set; } = string.Empty;
 
+        [Required]
+        public string Role { get; set; } = string.Empty;
 
         // Navigation property
         public List<Shipment>? Shipments { get; set; }
 
     }
+
 }

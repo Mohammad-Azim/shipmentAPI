@@ -8,38 +8,36 @@ namespace ShipmentAPI.Controllers
 
     [ApiController]
     [Route("[controller]")]
-    public class CarrierServiceController : ControllerBase
+    public class CarrierController : ControllerBase
     {
 
-        private IUnitOfWork? _unitOfWork;
-        public CarrierServiceController(IUnitOfWork unitOfWork)
+        private IUnitOfWork _unitOfWork;
+        public CarrierController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet(Name = "GetCarrierServices")]
+        [HttpGet(Name = "GetCarrier")]
         public IActionResult Get()
         {
-            var response = _unitOfWork?.CarrierService?.GetAll().Include(b => b.Shipments);
+            var response = _unitOfWork?.Carrier?.GetAll().Include(b => b.Shipments).Include(e => e.CarrierServices);
             return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CarrierService model)
+        public async Task<IActionResult> Post([FromBody] Carrier model)
         {
             try
             {
-                _unitOfWork!.CarrierService?.Add(model);
+                _unitOfWork.Carrier.Add(model);
                 await _unitOfWork.Save();
-                return Ok(model);
+                return Ok(ResponseHandler.GetAppResponse(ResponseType.Success, model));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex);
             }
         }
-
-
 
     }
 

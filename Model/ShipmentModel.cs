@@ -1,14 +1,12 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ShipmentApi.Model
+namespace ShipmentAPI.Model
 {
 
-    [Table("Shipments")]
     public class Shipment
     {
         [Key, Required]
-        public int id { get; set; }
+        public int Id { get; set; }
 
         public int width { get; set; }
 
@@ -17,8 +15,22 @@ namespace ShipmentApi.Model
         public int weight { get; set; }
 
 
-        [Required]
+        // Foreign Key
+        public int UserId { get; set; }
+        // Navigation property
+        public User? User { get; set; }
+
+        // Foreign Key
+        public int CarrierId { get; set; }
+        // Navigation property
+        public Carrier? Carrier { get; set; }
+
+        // Foreign Key
         public int CarrierServiceId { get; set; }
-        public CarrierService? carrierService { get; set; }
+        // Navigation property
+        public CarrierService? CarrierService { get; set; }
+
     }
+
+
 }
